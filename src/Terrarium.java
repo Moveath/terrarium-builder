@@ -38,7 +38,7 @@ public class Terrarium
     public static class Builder
     {
         private static final HumidityLevel DEFAULT_HUMIDITY = HumidityLevel.MEDIUM;
-        private ContainerSize Size;
+        private ContainerSize size;
         private Substrate substrate;
         private HumidityLevel humidity = DEFAULT_HUMIDITY;
         private boolean hasLighting = false;
@@ -72,6 +72,11 @@ public class Terrarium
         {
             plants.add(plant);
             return this;
+        }
+        public Terrarium build()
+        {
+            validateState();
+            return new Terrarium(this);
         }
 
         public Builder addDecoration(String decoration)
