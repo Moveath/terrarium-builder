@@ -1,34 +1,34 @@
 # Terrarium Builder
 
-Реализация паттерна **Builder** на примере конструктора террариумов для рептилий/растений.
+Implementation of the **Builder** design pattern using a terrarium constructor as an example.
 
-## Что строим
+## What is being built
 
-`Terrarium` — сложный объект с обязательными (`size`, `substrate`) и опциональными (`humidity`, `hasLighting`, `plants`, `decorations`) параметрами. Вместо телескопических конструкторов используется fluent-билдер (`Terrarium.Builder`) с method chaining, а `TerrariumDirector` инкапсулирует готовые "рецепты" (`makeDesertTerrarium`, `makeTropicalTerrarium`), не мешая клиенту собирать кастомные конфигурации напрямую через билдер.
+`Terrarium` is a complex object with required parameters (`size`, `substrate`) and optional ones (`humidity`, `hasLighting`, `plants`, `decorations`). Instead of telescoping constructors, a fluent builder (`Terrarium.Builder`) with method chaining is used. `TerrariumDirector` stores ready-made "recipes" (`makeDesertTerrarium`, `makeTropicalTerrarium`), but the client can still build a custom configuration directly through the builder.
 
-## Структура
+## Structure
 
-- `Terrarium` — продукт (immutable).
-- `Terrarium.Builder` — билдер с методами-сеттерами и `build()`.
-- `TerrariumDirector` — director с предустановленными конфигурациями.
-- `ContainerSize`, `Substrate`, `HumidityLevel` — enum'ы вместо строк/чисел.
-- `Main` — клиентский код.
+- `Terrarium` the product (immutable).
+- `Terrarium.Builder` builder with setter methods and `build()`.
+- `TerrariumDirector` director with predefined configurations.
+- `ContainerSize`, `Substrate`, `HumidityLevel` enums instead of raw strings/numbers.
+- `Main` client code.
 
-## Принципы Clean Code
+## Clean Code principles
 
-### 1. Осмысленные имена (Meaningful, intention-revealing names)
-Методы называются по смыслу действия, а не абстрактно (`set(1, "x")`).
+### 1. Meaningful, intention-revealing names
+Method names describe the action itself instead of being abstract setters.
 ```java
-// Было:
+// Before (bad):
 builder.set(0, true);
 
-// Стало:
+// After:
 builder.withLighting();
 builder.addPlant("cactus");
 ```
 
-### 2. Небольшие методы, каждый делает одну вещь
-Каждый метод билдера отвечает ровно за одно поле и не содержит побочной логики.
+### 2. Small methods, each doing one thing
+Every builder method is responsible for exactly one field and has no extra side logic.
 ```java
 public Builder substrate(Substrate substrate) {
     this.substrate = substrate;
@@ -36,8 +36,8 @@ public Builder substrate(Substrate substrate) {
 }
 ```
 
-### 3. Валидация состояния при конструировании
-`build()` не возвращает "битый" объект — сначала проверяет обязательные поля и явно бросает исключение.
+### 3. Validated construction
+`build()` doesn't return a broken object it checks the required fields first and throws a clear exception if something is missing.
 ```java
 public Terrarium build() {
     validateState();
@@ -54,20 +54,20 @@ private void validateState() {
 }
 ```
 
-### 4. Отсутствие магических чисел/строк
-Вместо строк `"sand"`, `"low"` и т.п. используются типобезопасные enum'ы — ошибка опечатки ловится компилятором, а не в рантайме.
+### 4. No magic numbers/strings
+Instead of raw strings like `"sand"` or `"low"`, type-safe enums are used, so a typo is caught by the compiler instead of at runtime.
 ```java
-// Было:
+// Before (bad):
 builder.substrate("sand");
 builder.humidity("low");
 
-
+// After:
 builder.substrate(Substrate.SAND);
 builder.humidity(HumidityLevel.LOW);
 ```
 
-### 5. Разделение ответственности между небольшими классами (SRP)
-Продукт, билдер и director — три разных класса с одной обязанностью каждый: `Terrarium` хранит данные, `Builder` собирает объект пошагово, `TerrariumDirector` знает только *порядок* вызовов для типовых конфигураций, но не детали сборки.
+### 5. Single Responsibility across small classes
+The product, builder and director are three separate classes, each with one job: `Terrarium` holds the data, `Builder` assembles it step by step, and `TerrariumDirector` only knows the *order* of calls for common configurations — it doesn't know the assembly details.
 ```java
 public Terrarium makeDesertTerrarium(Terrarium.Builder builder) {
     return builder
@@ -81,7 +81,7 @@ public Terrarium makeDesertTerrarium(Terrarium.Builder builder) {
 }
 ```
 
-## Пример использования
+## Usage example
 
 ```java
 Terrarium customTerrarium = new Terrarium.Builder()
