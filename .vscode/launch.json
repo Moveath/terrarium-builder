@@ -1,0 +1,14 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Assignment 4",
+            "request": "launch",
+            "mainClass": "Main",
+            "classPaths": ["${workspaceFolder}/Assignment 4/bin"],
+            "cwd": "${workspaceFolder}/Assignment 4",
+            "console": "integratedTerminal"
+        }
+    ]
+}
