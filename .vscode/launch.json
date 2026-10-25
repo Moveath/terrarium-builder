@@ -3,6 +3,15 @@
     "configurations": [
         {
             "type": "java",
+            "name": "Assignment 5",
+            "request": "launch",
+            "mainClass": "Main",
+            "classPaths": ["${workspaceFolder}/Assignment 5/bin"],
+            "cwd": "${workspaceFolder}/Assignment 5",
+            "console": "integratedTerminal"
+        },
+        {
+            "type": "java",
             "name": "Assignment 4",
             "request": "launch",
             "mainClass": "Main",
